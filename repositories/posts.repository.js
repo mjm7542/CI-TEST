@@ -1,8 +1,14 @@
 
 const sequelize = require("sequelize")
 const { Posts } = require('../models');
+const { Likes } = require("../models");
 
 class PostRepository {
+    // 게시글 확인
+    checkPost = async (postId) => {
+        const checkPost = await Posts.findOne({ where: { postId } });
+        return checkPost
+    }
     // 게시글 전체 조회
     findAllPost = async () => {
         const posts = await Posts.findAll({
@@ -28,7 +34,6 @@ class PostRepository {
     // 게시글 생성
     createPost = async (UserId, nickname, title, content) => {
         const createPostData = await Posts.create({ UserId, nickname, title, content });
-
         return createPostData;
     }
     // 게시글 상세 조회

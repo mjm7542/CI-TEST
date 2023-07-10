@@ -7,14 +7,20 @@ class LoginService {
 
     loginUesrs = async (nickname, password) => {
         try {
-            // 서비스에서 비밀번호 확인 및 에러처리 대부분
+            if (!nickname || !password) {
+                return {
+                    status: 412,
+                    errorMessage: "닉네임과 패스워드를 입력해주세요."
+                }
+            }
             const user = await this.LoginRepository.loginUesrs(nickname)
-            // 확인 후 토큰을 리턴한다
+
+            //! 닉네임 비밀번호 확인 
             if (!user || password !== user.password) {
-                res.status(412).json({
-                    errorMessage: "닉네임 또는 패스워드를 확인해주세요.",
-                });
-                return;
+                return {
+                    status: 412,
+                    errorMessage: "닉네임 또는 패스워드를 확인해주세요."
+                }
             }
             const token = jwt.sign(
                 { userId: user.userId, nickname: user.nickname },
@@ -24,9 +30,6 @@ class LoginService {
 
         } catch (err) {
             console.error(err)
-            return res
-                .status(400)
-                .json({ errormessage: "서비스에서 에러 발생" })
         }
     }
 }
